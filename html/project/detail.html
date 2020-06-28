@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目详情</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <style>
+        *{
+            font-size: 12px;
+        }
+        body{
+            background-color: #fff;
+        }
+        .main{
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 50px;
+        }
+        .title{
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            box-sizing: border-box;
+            position: fixed;
+            padding: 0 20px;
+            background-color: #fff;
+        }
+        .title .content{
+            height: 50px;
+            line-height: 50px;
+            border-bottom: solid 1px #e6e6e6;
+        }
+        h1{
+            float: left;
+            font-size: 2rem;
+        }
+        .btns{
+            float: right;
+        }
+        .layui-elem-quote{
+            font-size: 1.5rem;
+            padding: 0 10px !important;
+            background-color: #fff;
+        }
+        .layui-row{
+            margin-bottom: 50px;
+        }
+        .layui-form-label{
+            width: 120px;
+            text-align: left !important;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <form class="layui-form">
+            
+        <div class="title">
+            <div class="content">
+                <h1>编辑</h1>
+                <div class="btns">
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-project">保存</button>
+                    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="history.go(-1)">返回</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            
+            <blockquote class="layui-elem-quote">基本信息</blockquote>
+            <div class="layui-row layui-col-space10 x-city" id="location">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">工程名称</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="projectName" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">工程编号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="projectNo" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">合同编号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="contractNo" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">甲方名称（合同甲方）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="companyName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">甲方集团名称</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="groupName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">合同签订时间</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="signDate" id="signDate" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">开工时间（约定）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="startDate" id="startDate" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">竣工时间（约定）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="endDate" id="endDate" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">历时（月）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="months" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">合同总价</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="totalPrice" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">区域总</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="generalManager" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目经理</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="manager" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目所在地（省）</label>
+                    <div class="layui-col-md8">
+                        <select name="province" lay-filter="province">
+                            <option value="">请选择省</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目所在地（市）</label>
+                    <div class="layui-col-md8">
+                        <select name="city" lay-filter="city">
+                            <option value="">请选择市</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">待进场/施工中/已完工</label>
+                    <div class="layui-col-md8">
+                        <select name="status" lay-filter="status">
+                            <option value="1">待进场</option>
+                            <option value="1">施工中</option>
+                            <option value="1">已完工</option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+
+            <blockquote class="layui-elem-quote">项目部填写信息</blockquote>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">工程结构类型</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">建筑面积（㎡）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">实际进场时间</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">预计/实际完工时间</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目所在地定位</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目状态</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">总形象进度</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">风险情况简述</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">增补合同价</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">含增补合同总价</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">结算总价（元）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">保修金占比</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">保修金金额（元）</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">保修期限</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">《结算协议》扫描件</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">《竣工验收单》扫描件</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+            <blockquote class="layui-elem-quote">财务部填写项目盈亏分析</blockquote>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">区域财务</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">已开发票合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">甲方付款合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">现金收款合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">供应链收款合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">其他收入合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">已付工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">工人支款合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">管理费合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">包工工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">税金合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目报销费用总金额</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">其他费用合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">材料入库金额合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">财务信息更新日期</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+        
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/lib/layui/layui.js"></script>
+<script>
+    var form;
+    layui.use('form', function(){
+        form = layui.form;
+    });
+</script>
+<script src="/js/xcity.js"></script>
+<script>
+    layui.use(['layer','form','laydate'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        
+        laydate.render({
+            elem: '#signDate',
+            trigger: 'click'//呼出事件改成click
+        });
+        laydate.render({
+            elem: '#startDate',
+            trigger: 'click'//呼出事件改成click
+        });
+        laydate.render({
+            elem: '#endDate',
+            trigger: 'click'//呼出事件改成click
+        });
+
+        form.render();
+
+        // $('#location').xcity();
+        $('#location').xcity('江苏','南京市');
+
+
+        form.on('submit(sub-company)', function(data){
+            $.ajax({
+                url:baseUrl + '/sidan/finance/company/add',
+                type:'post',
+                data:data.field,
+                dataType:'json',
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        layer.close(window1);
+                        location.reload();
+                    }else{
+                        parent.layer.msg(json.msg);
+                    }
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(sub-project)', function(data){
+            console.log(data);
+            $.ajax({
+                url:baseUrl + '/sidan/finance/project/add',
+                type:'post',
+                data:data.field,
+                dataType:'json',
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        parent.layer.closeAll();//关闭父页面所有弹窗
+                        // parent.location.reload();//刷新父页面
+                        $(parent.document).find('iframe')[0].contentWindow.layui.renderTable();
+                    }else{
+                        parent.layer.msg(json.msg);
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+</script>
+</html>
