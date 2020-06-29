@@ -1,0 +1,56 @@
+@import url(/css/common/common.css);
+@import url(/css/common/margin.css);
+@import url(/lib/layui/css/layui.css);
+
+*{
+    font-size: 12px;
+}
+body{
+    background-color: #fff;
+}
+.main{
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+.title{
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    padding: 0 20px;
+    background-color: #fff;
+}
+.title .content{
+    height: 50px;
+    line-height: 50px;
+    border-bottom: solid 1px #e6e6e6;
+}
+h1{
+    float: left;
+    font-size: 2rem;
+}
+.btns{
+    float: right;
+}
+.layui-elem-quote{
+    font-size: 1.5rem;
+    padding: 0 10px !important;
+    background-color: #fff;
+}
+.layui-row{
+    margin-bottom: 50px;
+}
+.layui-form-label{
+    width: 120px;
+    text-align: left !important;
+}
+.required::after{
+    content: '*';
+    position: absolute;
+    color: red;
+    font-size: 20px;
+    margin-left: 10px;
+}

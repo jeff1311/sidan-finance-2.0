@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目列表</title>
-    <link rel="stylesheet" href="/css/project/list.css">
+    <title>员工列表</title>
+    <link rel="stylesheet" href="/css/employee/list.css">
 </head>
 <body>
 
     <div class="main">
 
         <div class="layui-row">
-            <div class="layui-col-md3 mr-1">
-                <input type="text" autocomplete="off" class="layui-input" placeholder="项目名称" id="projectName">
+            <div class="layui-col-md2 mr-1">
+                <input type="text" autocomplete="off" class="layui-input" placeholder="员工姓名" id="name">
             </div>
-            <!-- <div class="layui-col-md2 mr-1 search-date">
-                <input type="text" class="layui-input" id="searchDate">
-            </div> -->
             <div class="layui-col-md1">
                 <button class="layui-btn layui-btn-primary" id="search">查询</button>
             </div>
-            <a class="layui-btn add-p" href="/html/project/detail.html?type=new">
-                <i class="layui-icon">&#xe608;</i> 添加项目
+            <a class="layui-btn add-p" href="/html/employee/detail.html?type=new">
+                <i class="layui-icon">&#xe608;</i> 添加员工
             </a>
         </div>
 
@@ -51,29 +48,25 @@
             table.render({
                 elem: '#table',
                 height: 790,
-                url: baseUrl + '/sidan/finance/project/list', //数据接口
+                url: baseUrl + '/sidan/finance/employee/list', //数据接口
                 page: true, //开启分页
                 limit: 20,
                 cols: [
                     [//表头
-                        {field: 'name', title: '项目名称', width:200},
-                        {field: 'no', title: '项目编号', width:100, sort: true},
-                        {field: 'contractNo', title: '合同编号', width:110, sort: true},
-                        {field: 'companyName', title: '甲方名称', width:170},
-                        {field: 'groupName', title: '甲方集团名称', width: 170},
-                        {field: 'contractSignDate', title: '合同签订时间', width: 120, sort: true, templet:'<div>{{d.contractSignDate}}</div>'},
-                        {field: 'startDate', title: '项目开工时间', width: 120, sort: true, templet:'<div>{{d.startDate}}</div>'},
-                        {field: 'endDate', title: '项目竣工时间', width: 120, sort: true, templet:'<div>{{d.endDate}}</div>'},
-                        {field: 'months', title: '历时（月）', width: 110, sort: true},
-                        {field: 'totalPrice', title: '￥合同总价', width: 110, sort: true},
-                        {field: 'generalManager', title: '区域总', width: 110},
-                        {field: 'manager', title: '项目经理', width: 110},
-                        {field: 'status', title: '项目状态', width: 110},
+                        {field: 'name', title: '员工姓名', width: '10%'},
+                        {field: 'gender', title: '性别', width: '7%'},
+                        {field: 'phone', title: '联系电话', width: '10.5%'},
+                        {field: 'certNo', title: '身份证号', width: '13%'},
+                        {field: 'bankNo', title: '银行卡号', width: '13%'},
+                        {field: 'superiorName', title: '工长', width: '10%'},
+                        {field: 'managerName', title: '项目经理', width: '10%'},
+                        {field: 'bankName', title: '开户行', width: '13%'},
+                        {field: 'typeName', title: '工种', width: '7%'},
                         {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
                     ]   
                 ],
                 where:{
-                    projectName: $('#projectName').val(),
+                    name: $('#name').val(),
                     startDate: $('#searchDate').val()
                 }
             });
@@ -99,10 +92,10 @@
                         btn: ['确定', '取消'],
                         yes: function(index){
                             $.ajax({
-                                url:baseUrl + '/sidan/finance/project/add',
+                                url:baseUrl + '/sidan/finance/employee/add',
                                 type:'post',
                                 data:{
-                                    projectId:obj.data.id,
+                                    employeeId:obj.data.id,
                                     deleteMark:1
                                 },
                                 dataType:'json',
@@ -112,9 +105,9 @@
                                         obj.del();
                                         layer.close(index);
                                         layer.msg('删除成功');
-                                        // parent.location.reload();//刷新父页面
+                                        // location.reload();//刷新父页面
                                     }else{
-                                        parent.layer.msg(json.msg);
+                                        layer.msg(json.msg);
                                     }
                                 }
                             });
@@ -122,7 +115,7 @@
                     });
                     break;
                 case 'edit':
-                    location.href = '/html/project/detail.html?projectId=' + obj.data.id;
+                    location.href = '/html/employee/detail.html?employeeId=' + obj.data.id;
                     break;
             };
         });

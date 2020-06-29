@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目详情</title>
+    <title>项目信息详情</title>
     <link rel="stylesheet" href="/css/project/detail.css">
 </head>
 <body>
@@ -29,13 +29,13 @@
                 <div class="layui-col-md4">
                     <label class="layui-form-label required">工程名称</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="projectName" id="projectName" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectName" id="projectName" required lay-verify="required" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label required">工程编号</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="projectNo" id="projectNo" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectNo" id="projectNo" required lay-verify="required" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -390,7 +390,6 @@
                 $('#manager').val(project.manager);
                 $('#location').xcity(project.province,project.city);
                 var status = $('#status').children();
-                console.log(project.status);
                 for (var i = 0; i < status.length; i++) {
                     if (status[i].value == project.status) {
                         status[i].selected = true;

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工信息详情</title>
+    <link rel="stylesheet" href="/css/employee/detail.css">
+</head>
+<body>
+
+    <form class="layui-form">
+        
+        <input type="hidden" name="employeeId" id="employeeId">
+
+        <div class="title">
+            <div class="content">
+                <h1 id="act-type"></h1>
+                <div class="btns">
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-employee">保存</button>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/employee/list.html">返回</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            
+            <blockquote class="layui-elem-quote">基本信息</blockquote>
+            <div class="layui-row layui-col-space10 x-city" id="location">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">工人姓名</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="name" id="name" required lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">性别</label>
+                    <div class="layui-col-md8">
+                        <select name="gender" id="gender" lay-filter="gender" required lay-verify="required">
+                            <option value="">请选择</option>
+                            <option value="1">男</option>
+                            <option value="2">女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">联系电话</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="phone" id="phone" autocomplete="off" class="layui-input" required lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">身份证号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input" required lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">银行卡号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="bankNo" id="bankNo" autocomplete="off" class="layui-input" required lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">工长</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="superior" id="superiorName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">项目经理</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="manager" id="managerName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">开户行</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="bankName" id="bankName" autocomplete="off" class="layui-input" required lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">工种</label>
+                    <div class="layui-col-md8">
+                        <select name="type" id="type" lay-filter="type" required lay-verify="required">
+                            <option value="">请选择</option>
+                            <option value="0">管理</option>
+                            <option value="1">木工</option>
+                            <option value="2">瓦工</option>
+                            <option value="3">油工</option>
+                            <option value="4">电工</option>
+                            <option value="5">小工</option>
+                            <option value="6">抹灰工</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <blockquote class="layui-elem-quote">财务数据</blockquote>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">点工工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">包工工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">支款金额合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">已结算金额合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">剩余工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="title" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+        
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js"></script>
+<script>
+    layui.use(['layer','form'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        
+        var actType = getParamFromUrl('type');
+        if(actType == 'new'){
+            $('#act-type').text('新建');
+        }else{
+            $('#act-type').text('编辑');
+        }
+        var employeeId = getParamFromUrl('employeeId');
+        $('#employeeId').val(employeeId);
+
+        $.ajax({
+            url: baseUrl + '/sidan/finance/employee/info',
+            type: 'get',
+            data: {
+                employeeId: employeeId
+            },
+            dataType: 'json',
+            success: function(json){
+                console.log(json);
+                var employee = json.info;
+                $('#name').val(employee.name);
+                var genderList = $('#gender').children();
+                for (var i = 0; i < genderList.length; i++) {
+                    if (genderList[i].value == employee.gender) {
+                        genderList[i].selected = true;
+                    }
+                }
+                $('#phone').val(employee.phone);
+                $('#certNo').val(employee.certNo);
+                $('#bankNo').val(employee.bankNo);
+                $('#superiorName').val(employee.superiorName);
+                $('#managerName').val(employee.managerName);
+                $('#bankName').val(employee.bankName);
+                var typeList = $('#type').children();
+                for (var i = 0; i < typeList.length; i++) {
+                    if (typeList[i].value == employee.type) {
+                        typeList[i].selected = true;
+                    }
+                }
+                form.render();
+            }
+        })
+
+        form.on('submit(sub-employee)', function(data){
+            console.log(data);
+            $.ajax({
+                url:baseUrl + '/sidan/finance/employee/add',
+                type:'post',
+                data:data.field,
+                dataType:'json',
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        layer.msg('保存成功');
+                    }else{
+                        layer.msg(json.msg);
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+</script>
+</html>
