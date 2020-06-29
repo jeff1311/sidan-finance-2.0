@@ -4,66 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>项目详情</title>
-    <link rel="stylesheet" href="/lib/layui/css/layui.css">
-    <style>
-        *{
-            font-size: 12px;
-        }
-        body{
-            background-color: #fff;
-        }
-        .main{
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            margin-top: 50px;
-        }
-        .title{
-            top: 0;
-            z-index: 100;
-            width: 100%;
-            box-sizing: border-box;
-            position: fixed;
-            padding: 0 20px;
-            background-color: #fff;
-        }
-        .title .content{
-            height: 50px;
-            line-height: 50px;
-            border-bottom: solid 1px #e6e6e6;
-        }
-        h1{
-            float: left;
-            font-size: 2rem;
-        }
-        .btns{
-            float: right;
-        }
-        .layui-elem-quote{
-            font-size: 1.5rem;
-            padding: 0 10px !important;
-            background-color: #fff;
-        }
-        .layui-row{
-            margin-bottom: 50px;
-        }
-        .layui-form-label{
-            width: 120px;
-            text-align: left !important;
-        }
-        
-    </style>
+    <link rel="stylesheet" href="/css/project/detail.css">
 </head>
 <body>
 
     <form class="layui-form">
-            
+        
+        <input type="hidden" name="projectId" id="projectId">
+
         <div class="title">
             <div class="content">
-                <h1>编辑</h1>
+                <h1 id="type"></h1>
                 <div class="btns">
                     <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-project">保存</button>
-                    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="history.go(-1)">返回</button>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/project/list.html">返回</a>
                 </div>
             </div>
         </div>
@@ -73,33 +27,33 @@
             <blockquote class="layui-elem-quote">基本信息</blockquote>
             <div class="layui-row layui-col-space10 x-city" id="location">
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">工程名称</label>
+                    <label class="layui-form-label required">工程名称</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="projectName" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectName" id="projectName" required  lay-verify="required" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">工程编号</label>
+                    <label class="layui-form-label required">工程编号</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="projectNo" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectNo" id="projectNo" required  lay-verify="required" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">合同编号</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="contractNo" autocomplete="off" class="layui-input">
+                        <input type="text" name="contractNo" id="contractNo" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">甲方名称（合同甲方）</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="companyName" autocomplete="off" class="layui-input">
+                        <input type="text" name="companyName" id="companyName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">甲方集团名称</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="groupName" autocomplete="off" class="layui-input">
+                        <input type="text" name="groupName" id="groupName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -123,25 +77,25 @@
                 <div class="layui-col-md4">
                     <label class="layui-form-label">历时（月）</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="months" autocomplete="off" class="layui-input">
+                        <input type="number" name="months" id="months" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">合同总价</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="totalPrice" autocomplete="off" class="layui-input">
+                        <input type="number" name="totalPrice" id="totalPrice" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">区域总</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="generalManager" autocomplete="off" class="layui-input">
+                        <input type="text" name="generalManager" id="generalManager" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">项目经理</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="manager" autocomplete="off" class="layui-input">
+                        <input type="text" name="manager" id="manager" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -161,12 +115,13 @@
                     </div>
                 </div>
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">待进场/施工中/已完工</label>
+                    <label class="layui-form-label">项目状态</label>
                     <div class="layui-col-md8">
-                        <select name="status" lay-filter="status">
+                        <select name="status" id="status" lay-filter="status">
                             <option value="1">待进场</option>
-                            <option value="1">施工中</option>
-                            <option value="1">已完工</option>
+                            <option value="2">施工中</option>
+                            <option value="3">停工中</option>
+                            <option value="4">已完工</option>
                         </select>
                     </div>
                 </div>
@@ -384,7 +339,8 @@
         
 </body>
 <script src="/js/config.js"></script>
-<script src="/js/jquery.min.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/lib/layui/layui.js"></script>
 <script>
     var form;
@@ -399,43 +355,89 @@
         var form = layui.form;
         var laydate = layui.laydate;
         
+        var type = getParamFromUrl('type');
+        if(type == 'new'){
+            $('#type').text('新建');
+        }else{
+            $('#type').text('编辑');
+        }
+        var projectId = getParamFromUrl('projectId');
+        $('#projectId').val(projectId);
+
+        $('#location').xcity();
+
+        $.ajax({
+            url: baseUrl + '/sidan/finance/project/info',
+            type: 'get',
+            data: {
+                projectId: projectId
+            },
+            dataType: 'json',
+            success: function(json){
+                console.log(json);
+                var project = json.info;
+                $('#projectName').val(project.name);
+                $('#projectNo').val(project.no);
+                $('#contractNo').val(project.contractNo);
+                $('#companyName').val(project.companyName);
+                $('#groupName').val(project.groupName);
+                $('#signDate').val(project.contractSignDate);
+                $('#startDate').val(project.startDate);
+                $('#endDate').val(project.endDate);
+                $('#months').val(project.months);
+                $('#totalPrice').val(project.totalPrice);
+                $('#generalManager').val(project.generalManager);
+                $('#manager').val(project.manager);
+                $('#location').xcity(project.province,project.city);
+                var status = $('#status').children();
+                console.log(project.status);
+                for (var i = 0; i < status.length; i++) {
+                    if (status[i].value == project.status) {
+                        status[i].selected = true;
+                    }
+                }
+                form.render();
+            }
+        })
+
         laydate.render({
             elem: '#signDate',
             trigger: 'click'//呼出事件改成click
         });
         laydate.render({
             elem: '#startDate',
-            trigger: 'click'//呼出事件改成click
+            trigger: 'click',//呼出事件改成click
+            done: function(value,date){
+                countMonth();
+            }
         });
         laydate.render({
             elem: '#endDate',
-            trigger: 'click'//呼出事件改成click
+            trigger: 'click',//呼出事件改成click
+            done: function(value,date){
+                countMonth();
+            }
         });
 
-        form.render();
+        // form.render();
 
-        // $('#location').xcity();
-        $('#location').xcity('江苏','南京市');
-
-
-        form.on('submit(sub-company)', function(data){
-            $.ajax({
-                url:baseUrl + '/sidan/finance/company/add',
-                type:'post',
-                data:data.field,
-                dataType:'json',
-                success:function(json){
-                    console.log(json);
-                    if(json.code == 0){
-                        layer.close(window1);
-                        location.reload();
-                    }else{
-                        parent.layer.msg(json.msg);
-                    }
+        function countMonth(){
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            if(startDate != null && endDate != null){
+                var start = new Date(startDate);
+                var end = new Date(endDate);
+                var startMs = start.getTime();
+                var endMs = end.getTime();
+                if(endMs > startMs){
+                    var month = (endMs - startMs) / (1000 * 60 * 60 * 24) / 30;
+                    console.log(month.toFixed(1));
+                    $('#months').val(month.toFixed(1));
+                }else{
+                    $('#months').val(0);
                 }
-            })
-            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-        });
+            }
+        }
 
         form.on('submit(sub-project)', function(data){
             console.log(data);
@@ -447,11 +449,9 @@
                 success:function(json){
                     console.log(json);
                     if(json.code == 0){
-                        parent.layer.closeAll();//关闭父页面所有弹窗
-                        // parent.location.reload();//刷新父页面
-                        $(parent.document).find('iframe')[0].contentWindow.layui.renderTable();
+                        layer.msg('保存成功');
                     }else{
-                        parent.layer.msg(json.msg);
+                        layer.msg(json.msg);
                     }
                 }
             });

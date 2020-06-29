@@ -4,31 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>项目列表</title>
-    <link rel="stylesheet" href="/lib/layui/css/layui.css">
-    <style>
-        *{
-            font-size: 12px;
-        }
-        body{
-            background-color: #fff;
-        }
-        .main{
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/project/list.css">
 </head>
 <body>
 
     <div class="main">
 
-        
+        <div class="layui-row">
+            <div class="layui-col-md3 mr-1">
+                <input type="text" autocomplete="off" class="layui-input" placeholder="项目名称" id="projectName">
+            </div>
+            <!-- <div class="layui-col-md2 mr-1 search-date">
+                <input type="text" class="layui-input" id="searchDate">
+            </div> -->
+            <div class="layui-col-md1">
+                <button class="layui-btn layui-btn-primary" id="search">查询</button>
+            </div>
+            <a href="/html/project/detail.html?type=new">
+                <button class="layui-btn add-p">
+                    <i class="layui-icon">&#xe608;</i> 添加项目
+                </button>
+            </a>
+        </div>
+
+        <table id="table" lay-filter="table-filter"></table>
+
     </div>
+
 </body>
-<script src="/js/jquery.min.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/lib/layui/layui.js"></script>
+<script type="text/html" id="feeBar">
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="cost-detail">明细</a>
+</script>
+<script type="text/html" id="actBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script>
+
+    layui.use(['layer','form','table'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+
+        layui.renderTable = function(){
+            table.render({
+                elem: '#table',
+                height: 790,
+                url: baseUrl + '/sidan/finance/project/list', //数据接口
+                page: true, //开启分页
+                limit: 20,
+                cols: [
+                    [//表头
+                        {field: 'name', title: '项目名称', width:200},
+                        {field: 'no', title: '项目编号', width:100, sort: true},
+                        {field: 'contractNo', title: '合同编号', width:110, sort: true},
+                        {field: 'companyName', title: '甲方名称', width:170},
+                        {field: 'groupName', title: '甲方集团名称', width: 170},
+                        {field: 'contractSignDate', title: '合同签订时间', width: 120, sort: true, templet:'<div>{{d.contractSignDate}}</div>'},
+                        {field: 'startDate', title: '项目开工时间', width: 120, sort: true, templet:'<div>{{d.startDate}}</div>'},
+                        {field: 'endDate', title: '项目竣工时间', width: 120, sort: true, templet:'<div>{{d.endDate}}</div>'},
+                        {field: 'months', title: '历时（月）', width: 110, sort: true},
+                        {field: 'totalPrice', title: '￥合同总价', width: 110, sort: true},
+                        {field: 'generalManager', title: '区域总', width: 110},
+                        {field: 'manager', title: '项目经理', width: 110},
+                        {field: 'status', title: '项目状态', width: 110},
+                        {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
+                    ]   
+                ],
+                where:{
+                    projectName: $('#projectName').val(),
+                    startDate: $('#searchDate').val()
+                }
+            });
+        }
+      
+        layui.renderTable();
+
+        $('#search').on('click',function(){
+            layui.renderTable();
+        });
+        
+        //监听事件
+        table.on('tool(table-filter)', function(obj){
+            console.log(obj.data);
+            // var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add':
+                    layer.msg('添加');
+                    break;
+                case 'del':
+                    layer.msg('你确定删除么？', {
+                        time: 0, //不自动关闭
+                        btn: ['确定', '取消'],
+                        yes: function(index){
+                            $.ajax({
+                                url:baseUrl + '/sidan/finance/project/add',
+                                type:'post',
+                                data:{
+                                    projectId:obj.data.id,
+                                    deleteMark:1
+                                },
+                                dataType:'json',
+                                success:function(json){
+                                    console.log(json);
+                                    if(json.code == 0){
+                                        obj.del();
+                                        layer.close(index);
+                                        layer.msg('删除成功');
+                                        // parent.location.reload();//刷新父页面
+                                    }else{
+                                        parent.layer.msg(json.msg);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+                case 'edit':
+                    location.href = '/html/project/detail.html?projectId=' + obj.data.id;
+                    break;
+                case 'cost-detail':
+                    location.href = '/html/cost-detail.html?projectId=' + obj.data.id;
+                    break;
+            };
+        });
+
+    });
 
 </script>
 </html>
