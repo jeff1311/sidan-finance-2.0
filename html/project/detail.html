@@ -89,13 +89,25 @@
                 <div class="layui-col-md4">
                     <label class="layui-form-label">区域总</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="generalManager" id="generalManager" autocomplete="off" class="layui-input">
+                        <input type="hidden" name="generalManager" id="generalManager">
+                        <div class="emp">
+                            <div id="emp_selected_1">
+                                <span>张三</span>&nbsp;
+                                <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">项目经理</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="manager" id="manager" autocomplete="off" class="layui-input">
+                        <input type="hidden" name="manager" id="manager">
+                        <div class="emp">
+                            <div id="emp_selected_1">
+                                <span>李四</span>&nbsp;
+                                <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -350,11 +362,12 @@
 </script>
 <script src="/js/xcity.js"></script>
 <script>
-    layui.use(['layer','form','laydate'], function(){
+    layui.use(['layer','form','laydate','laytpl'], function(){
         var layer = layui.layer;
         var form = layui.form;
         var laydate = layui.laydate;
-        
+        var laytpl = layui.laytpl;
+
         var type = getParamFromUrl('type');
         if(type == 'new'){
             $('#type').text('新建');
@@ -388,6 +401,7 @@
                 $('#totalPrice').val(project.totalPrice);
                 $('#generalManager').val(project.generalManager);
                 $('#manager').val(project.manager);
+                
                 $('#location').xcity(project.province,project.city);
                 var status = $('#status').children();
                 for (var i = 0; i < status.length; i++) {
