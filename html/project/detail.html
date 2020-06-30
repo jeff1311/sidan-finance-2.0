@@ -90,19 +90,20 @@
                     <label class="layui-form-label">区域总</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="generalManager" id="generalManager">
-                        <div class="emp">
+                        <div class="emp" id="emp_gm">
                             <div id="emp_selected_1">
                                 <span>张三</span>&nbsp;
                                 <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
                             </div>
                         </div>
+                        <div class="select_emp"></div>
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">项目经理</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="manager" id="manager">
-                        <div class="emp">
+                        <div class="emp" id="emp_m">
                             <div id="emp_selected_1">
                                 <span>李四</span>&nbsp;
                                 <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
@@ -469,6 +470,12 @@
                 }
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $('#emp_gm').on('click',function(e){
+            console.log(e);
+            var html = '<div class="select_emp" style="top:' + e.pageX + 'px;left:' + e.pageY + 'px"></div>'
+            $('body').append(html);
         });
 
     });

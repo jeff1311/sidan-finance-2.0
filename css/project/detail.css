@@ -103,3 +103,23 @@ h1 {
   -webkit-transform: rotate(360deg);
   /* Safari å’Œ Chrome */
 }
+.select_emp {
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  border: solid 1px gray;
+  min-width: 120px;
+  margin-left: -2rem;
+  margin-top: 5rem;
+  z-index: 100;
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  box-shadow: 0 12px 10px 3px rgba(0, 0, 0, 0.1);
+}
+.emp:hover + .select_emp {
+  visibility: visible;
+  opacity: 1;
+  margin-top: -0.5rem;
+}
