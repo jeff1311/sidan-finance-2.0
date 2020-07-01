@@ -90,25 +90,14 @@
                     <label class="layui-form-label">区域总</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="generalManager" id="generalManager">
-                        <div class="emp" id="emp_gm">
-                            <div id="emp_selected_1">
-                                <span>张三</span>&nbsp;
-                                <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
-                            </div>
-                        </div>
-                        <div class="select_emp"></div>
+                        <div class="emp" id="emp_gm"></div>
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">项目经理</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="manager" id="manager">
-                        <div class="emp" id="emp_m">
-                            <div id="emp_selected_1">
-                                <span>李四</span>&nbsp;
-                                <i class="layui-icon" onclick="layui.removeEmp(this,'1')">&#x1006;</i>
-                            </div>
-                        </div>
+                        <div class="emp" id="emp_m"></div>
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -355,6 +344,25 @@
 <script src="/js/common.js"></script>
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/lib/layui/layui.js"></script>
+<script type="text/html" id="eList-tpl">
+
+    <div class="layui-row" style="margin-bottom: 0;padding: 10px;box-sizing: border-box;">
+        <div class="layui-col-md-12">
+            <input type="text" class="layui-input" placeholder="查询员工姓名" autocomplete="off" id="search-emp">
+        </div>
+        <div class="layui-col-md-12" style="margin-top: 10px;">
+            <ul class="employee-list" id="emp-list">
+                {{# for (const emp of d.list) { }}
+                    <li onclick="layui.chooseEmp({{ d.type }},{{ emp.id }},'{{ emp.name }}')">
+                        <span>{{ emp.name }}</span>
+                        <span>{{ emp.typeName }} </span>
+                    </li>
+                {{# } }}
+            </ul>
+        </div>
+    </div>
+
+</script>
 <script>
     var form;
     layui.use('form', function(){
@@ -401,7 +409,21 @@
                 $('#months').val(project.months);
                 $('#totalPrice').val(project.totalPrice);
                 $('#generalManager').val(project.generalManager);
+                if(project.generalManagerId > 0){
+                    var gm_html = '<div>' +
+                                    '<span>' + project.generalManagerName + '</span>&nbsp;' +
+                                    '<i class="layui-icon" onclick="layui.removeEmp(1)">&#x1006;</i>' +
+                                '</div>';
+                    $('#emp_gm').html(gm_html);
+                }
                 $('#manager').val(project.manager);
+                if(project.managerId > 0){
+                    var m_html = '<div>' +
+                                    '<span>' + project.managerName + '</span>&nbsp;' +
+                                    '<i class="layui-icon" onclick="layui.removeEmp(2)">&#x1006;</i>' +
+                                '</div>';
+                    $('#emp_m').html(m_html);
+                }
                 
                 $('#location').xcity(project.province,project.city);
                 var status = $('#status').children();
@@ -432,8 +454,6 @@
                 countMonth();
             }
         });
-
-        // form.render();
 
         function countMonth(){
             var startDate = $('#startDate').val();
@@ -473,10 +493,141 @@
         });
 
         $('#emp_gm').on('click',function(e){
-            console.log(e);
-            var html = '<div class="select_emp" style="top:' + e.pageX + 'px;left:' + e.pageY + 'px"></div>'
-            $('body').append(html);
+            if(e.target.id != 'emp_gm'){
+                return false;
+            }
+            var pos = e.target.getBoundingClientRect();
+            var data = getEmpList();
+            data.type = 1;
+            //同步方式
+            var tpl = laytpl($('#eList-tpl').html());
+            var html = tpl.render(data);
+            layer.closeAll();
+            layer.open({
+                type: 1,
+                anim: 2,
+                title: false,
+                shadeClose: true,
+                shade: false,
+                resize: false,
+                area: pos.width - 2 + 'px',
+                offset: [pos.y + pos.height + 'px', pos.x + 'px'],
+                content: html
+            });
+
+            var flag = false;
+            $('#search-emp').on('input', function(){
+                if(!flag){
+                    renderEmpList(1);
+                }
+            }).on('compositionstart', function(){
+                flag = true;//输入法，录入开始
+            }).on('compositionend', function(){
+                flag = false;//'输入法，输入结束'
+                renderEmpList(1);
+            });
+            
         });
+
+        $('#emp_m').on('click',function(e){
+            if(e.target.id != 'emp_m'){
+                return false;
+            }
+            var pos = e.target.getBoundingClientRect();
+            var data = getEmpList();
+            data.type = 2;
+            //同步方式
+            var tpl = laytpl($('#eList-tpl').html());
+            var html = tpl.render(data);
+            layer.closeAll();
+            layer.open({
+                type: 1,
+                anim: 2,
+                title: false,
+                shadeClose: true,
+                shade: false,
+                resize: false,
+                area: pos.width - 2 + 'px',
+                offset: [pos.y + pos.height + 'px', pos.x + 'px'],
+                content: html
+            });
+
+            var flag = false;
+            $('#search-emp').on('input', function(){
+                if(!flag){
+                    renderEmpList(2);
+                }
+            }).on('compositionstart', function(){
+                flag = true;//输入法，录入开始
+            }).on('compositionend', function(){
+                flag = false;//'输入法，输入结束'
+                renderEmpList(2);
+            });
+            
+        });
+
+        layui.chooseEmp = function(type,id,name){
+            console.log(id);
+            var html = '<div>' +
+                '<span>' + name + '</span>&nbsp;' +
+                '<i class="layui-icon" onclick="layui.removeEmp(' + type + ')">&#x1006;</i>' +
+                '</div>';
+                
+            if(type == 1){
+                $('#generalManager').val(id);
+                $('#emp_gm').html(html);
+            }else{
+                $('#manager').val(id);
+                $('#emp_m').html(html);
+            }
+            layer.closeAll();
+        }
+
+        function getEmpList(){
+            var data;
+            $.ajax({
+                url:baseUrl + '/sidan/finance/employee/list/all',
+                type:'get',
+                data: {
+                    name: $('#search-emp').val()
+                },
+                dataType:'json',
+                async: false,
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        data = json;
+                    }else{
+                        layer.msg(json.msg);
+                    }
+                }
+            });
+            return data;
+        }
+
+        function renderEmpList(type){
+            var data = getEmpList();
+            var html = '';
+            for (const emp of data.list) {
+                html += [
+                            '<li onclick="layui.chooseEmp(' + type + ',' + emp.id + ',\'' + emp.name + '\')">',
+                                '<span>' + emp.name + '</span>',
+                                '<span>' + emp.typeName + '</span>',
+                            '</div>'
+                        ].join('');
+            }
+            $('#emp-list').html(html);
+        }
+
+        layui.removeEmp = function(type){
+            if(type == 1){
+                $('#generalManager').val(-1);
+                $('#emp_gm').html('');
+            }else{
+                $('#manager').val(-1);
+                $('#emp_m').html('');
+            }
+        }
 
     });
 </script>
