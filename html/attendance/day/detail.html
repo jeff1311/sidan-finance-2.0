@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点工考勤详情</title>
+    <link rel="stylesheet" href="/css/attendance/day/detail.css">
+</head>
+<body>
+
+    <form class="layui-form">
+        
+        <input type="hidden" name="attendanceDayId" id="attendanceDayId">
+
+        <div class="title">
+            <div class="content">
+                <h1 id="act-type"></h1>
+                <div class="btns">
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-employee">保存</button>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/day/list.html">返回</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            
+            <blockquote class="layui-elem-quote">基本信息</blockquote>
+            <div class="layui-row layui-col-space10 x-city" id="location">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">工程名称</label>
+                    <div class="layui-col-md8">
+                        <select name="projectId" id="projectList" lay-filter="projectList"></select>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">工程编号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="projectNo" id="projectNo" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">实际应付工资</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">实际工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">年</label>
+                    <div class="layui-col-md8">
+                        <select name="year" id="year" lay-filter="year">
+                            <option value="">请选择</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">月</label>
+                    <div class="layui-col-md8">
+                        <select name="month" id="month" lay-filter="month">
+                            <option value="">请选择</option>
+                            <option value="1">01</option>
+                            <option value="2">02</option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                            <option value="6">06</option>
+                            <option value="7">07</option>
+                            <option value="8">08</option>
+                            <option value="9">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">工种</label>
+                    <div class="layui-col-md8">
+                        <select name="type" id="type" lay-filter="type">
+                            <option value="">请选择</option>
+                            <option value="0">管理</option>
+                            <option value="1">木工</option>
+                            <option value="2">瓦工</option>
+                            <option value="3">油工</option>
+                            <option value="4">电工</option>
+                            <option value="5">小工</option>
+                            <option value="6">抹灰工</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required">负责人</label>
+                    <div class="layui-col-md8">
+                        <input type="hidden" name="responsiblePerson" id="responsiblePerson" required lay-verify="required">
+                        <div class="emp" id="emp_rp"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <blockquote class="layui-elem-quote">点工考勤明细</blockquote>
+            <table id="table" lay-filter="table-filter"></table>
+
+        </div>
+    </form>
+        
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/lib/layui/layui.js"></script>
+<script type="text/html" id="eList-tpl">
+
+    <div class="layui-row" style="margin-bottom: 0;padding: 10px;box-sizing: border-box;">
+        <div class="layui-col-md-12">
+            <input type="text" class="layui-input" placeholder="查询员工姓名" autocomplete="off" id="search-emp">
+        </div>
+        <div class="layui-col-md-12" style="margin-top: 10px;">
+            <ul class="employee-list" id="emp-list">
+                {{# for (const emp of d.list) { }}
+                    <li onclick="layui.chooseEmp({{ emp.id }},'{{ emp.name }}')">
+                        <span>{{ emp.name }}</span>
+                        <span>{{ emp.typeName }} </span>
+                    </li>
+                {{# } }}
+            </ul>
+        </div>
+    </div>
+
+</script>
+<script>
+    layui.use(['layer','form','laytpl','table'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var table = layui.table;
+        
+        var actType = getParamFromUrl('type');
+        if(actType == 'new'){
+            $('#act-type').text('新建 点工考勤管理');
+        }else{
+            $('#act-type').text('编辑 点工考勤管理');
+        }
+        var attendanceDayId = getParamFromUrl('attendanceDayId');
+        $('#attendanceDayId').val(attendanceDayId);
+
+        table.render({
+            elem: '#table',
+            height: 470,
+            url: baseUrl + '/sidan/finance/employee/list', //数据接口
+            page: true, //开启分页
+            limit: 20,
+            cols: [
+                [//表头
+                    {field: 'employeeName', title: '点工姓名', width: 100},
+                    {field: 'year', title: '年', width: 100},
+                    {field: 'month', title: '月', width: 100},
+                    {field: 'projectName', title: '项目名称', width: 200},
+                    {field: 'day', title: '工日', width: 100, sort: true},
+                    {field: 'hour', title: '工时', width: 100, sort: true},
+                    {field: 'price', title: '工价', width: 100, sort: true},
+                    {field: 'amount', title: '实际工资', width: 120, sort: true},
+                    {field: 'payAmount', title: '实际应付工资', width: 120, sort: true},
+                    {field: 'workTypeName', title: '工种', width: 100},
+                    {field: 'deductAmount', title: '违章扣款', width: 120, sort: true},
+                    {field: 'bonus', title: '奖励款', width: 120, sort: true},
+                    {field: 'idNo', title: '身份证号', width: 200},
+                    {field: 'bankNo', title: '银行卡号', width: 200},
+                    {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
+                ]   
+            ],
+            where:{
+                name: $('#name').val(),
+                startDate: $('#searchDate').val()
+            }
+        });
+
+        $.ajax({
+            url: baseUrl + '/sidan/finance/attendance/day/info',
+            type: 'get',
+            data: {
+                employeeId: employeeId
+            },
+            dataType: 'json',
+            success: function(json){
+                console.log(json);
+                var html = '<option value="">请选择</option>';
+                for (const p of json.projectList) {
+                    html += '<option value="' + p.id + '">' + p.name + '</option>';
+                }
+                $('#projectList').html(html);
+
+                $('#responsiblePerson').val(json.info.responsiblePerson);
+                if(employee.managerId > 0){
+                    var rp_html = '<div>' +
+                                    '<span>' + json.info.responsiblePersonName + '</span>&nbsp;' +
+                                    '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
+                                  '</div>';
+                    $('#emp_rp').html(rp_html);
+                }
+                $('#bankName').val(employee.bankName);
+                var typeList = $('#type').children();
+                for (var i = 0; i < typeList.length; i++) {
+                    if (typeList[i].value == employee.type) {
+                        typeList[i].selected = true;
+                    }
+                }
+                form.render();
+            }
+        })
+
+        form.on('submit(sub-employee)', function(data){
+            console.log(data);
+            $.ajax({
+                url:baseUrl + '/sidan/finance/attendance/day/add',
+                type:'post',
+                data:data.field,
+                dataType:'json',
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        layer.msg('保存成功');
+                    }else{
+                        layer.msg(json.msg);
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $('#emp_rp').on('click',function(e){
+            if(e.target.id != 'emp_rp'){
+                return false;
+            }
+            var pos = e.target.getBoundingClientRect();
+            var data = getEmpList();
+            //同步方式
+            var tpl = laytpl($('#eList-tpl').html());
+            var html = tpl.render(data);
+            layer.closeAll();
+            layer.open({
+                type: 1,
+                anim: 2,
+                title: false,
+                shadeClose: true,
+                shade: false,
+                resize: false,
+                area: pos.width - 2 + 'px',
+                offset: [pos.y + pos.height + 'px', pos.x + 'px'],
+                content: html
+            });
+
+            var flag = false;
+            $('#search-emp').on('input', function(){
+                if(!flag){
+                    renderEmpList();
+                }
+            }).on('compositionstart', function(){
+                flag = true;//输入法，录入开始
+            }).on('compositionend', function(){
+                flag = false;//'输入法，输入结束'
+                renderEmpList();
+            });
+            
+        });
+
+        layui.chooseEmp = function(id,name){
+            console.log(id);
+            var html = '<div>' +
+                '<span>' + name + '</span>&nbsp;' +
+                '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
+                '</div>';
+            $('#responsiblePerson').val(id);
+            $('#emp_rp').html(html);
+            layer.closeAll();
+        }
+
+        function getEmpList(){
+            var data;
+            $.ajax({
+                url:baseUrl + '/sidan/finance/employee/list/all',
+                type:'get',
+                data: {
+                    name: $('#search-emp').val()
+                },
+                dataType:'json',
+                async: false,
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        data = json;
+                    }else{
+                        layer.msg(json.msg);
+                    }
+                }
+            });
+            return data;
+        }
+
+        function renderEmpList(){
+            var data = getEmpList();
+            var html = '';
+            for (const emp of data.list) {
+                html += [
+                            '<li onclick="layui.chooseEmp(' + emp.id + ',\'' + emp.name + '\')">',
+                                '<span>' + emp.name + '</span>',
+                                '<span>' + emp.typeName + '</span>',
+                            '</div>'
+                        ].join('');
+            }
+            $('#emp-list').html(html);
+        }
+
+        layui.removeEmp = function(){
+            $('#responsiblePerson').val(-1);
+            $('#emp_rp').html('');
+        }
+
+    });
+</script>
+</html>
