@@ -39,13 +39,22 @@
                     </div>
                 </div>
                 <div class="layui-col-md6">
-                    <label class="layui-form-label">实际应付工资</label>
+                    <label class="layui-form-label">工种</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
+                        <select name="type" id="type" lay-filter="type">
+                            <option value="">请选择</option>
+                            <option value="0">管理</option>
+                            <option value="1">木工</option>
+                            <option value="2">瓦工</option>
+                            <option value="3">油工</option>
+                            <option value="4">电工</option>
+                            <option value="5">小工</option>
+                            <option value="6">抹灰工</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-col-md6">
-                    <label class="layui-form-label">实际工资合计</label>
+                    <label class="layui-form-label">实际应付工资</label>
                     <div class="layui-col-md8">
                         <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
                     </div>
@@ -60,6 +69,12 @@
                             <option value="2021">2021</option>
                             <option value="2022">2022</option>
                         </select>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">实际工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -83,21 +98,6 @@
                     </div>
                 </div>
                 <div class="layui-col-md6">
-                    <label class="layui-form-label">工种</label>
-                    <div class="layui-col-md8">
-                        <select name="type" id="type" lay-filter="type">
-                            <option value="">请选择</option>
-                            <option value="0">管理</option>
-                            <option value="1">木工</option>
-                            <option value="2">瓦工</option>
-                            <option value="3">油工</option>
-                            <option value="4">电工</option>
-                            <option value="5">小工</option>
-                            <option value="6">抹灰工</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-col-md6">
                     <label class="layui-form-label required">负责人</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="responsiblePerson" id="responsiblePerson" required lay-verify="required">
@@ -109,8 +109,49 @@
 
 
 
-            <blockquote class="layui-elem-quote">点工考勤明细</blockquote>
-            <table id="table" lay-filter="table-filter"></table>
+            <div class="attendance-table-title">
+                <blockquote class="layui-elem-quote">点工考勤明细</blockquote>
+                <div class="btns">
+                    <span class="layui-btn layui-btn-primary layui-btn-sm" id="add-col">添加一行</span>
+                    <span class="layui-btn layui-btn-primary layui-btn-sm">从点工姓名批量添加</span>
+                </div>
+            </div>
+            <table class="layui-table attendance-table" id="attendance-table">
+                <colgroup>
+                    <col width="10">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="80">
+                    <col width="140">
+                    <col width="140">
+                    <col width="100">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" lay-skin="primary" lay-filter="allSelect"></th>
+                        <th>点工姓名</th>
+                        <th>工日</th>
+                        <th>工时</th>
+                        <th>工价</th>
+                        <th>实际工资</th>
+                        <th>应付工资</th>
+                        <th>违章扣款</th>
+                        <th>奖励款</th>
+                        <th>工种</th>
+                        <th>身份证号</th>
+                        <th>银行卡号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="emp-list"></tbody>
+            </table>
 
         </div>
     </form>
@@ -155,43 +196,43 @@
         var attendanceDayId = getParamFromUrl('attendanceDayId');
         $('#attendanceDayId').val(attendanceDayId);
 
-        table.render({
-            elem: '#table',
-            height: 470,
-            url: baseUrl + '/sidan/finance/employee/list', //数据接口
-            page: true, //开启分页
-            limit: 20,
-            cols: [
-                [//表头
-                    {field: 'employeeName', title: '点工姓名', width: 100},
-                    {field: 'year', title: '年', width: 100},
-                    {field: 'month', title: '月', width: 100},
-                    {field: 'projectName', title: '项目名称', width: 200},
-                    {field: 'day', title: '工日', width: 100, sort: true},
-                    {field: 'hour', title: '工时', width: 100, sort: true},
-                    {field: 'price', title: '工价', width: 100, sort: true},
-                    {field: 'amount', title: '实际工资', width: 120, sort: true},
-                    {field: 'payAmount', title: '实际应付工资', width: 120, sort: true},
-                    {field: 'workTypeName', title: '工种', width: 100},
-                    {field: 'deductAmount', title: '违章扣款', width: 120, sort: true},
-                    {field: 'bonus', title: '奖励款', width: 120, sort: true},
-                    {field: 'idNo', title: '身份证号', width: 200},
-                    {field: 'bankNo', title: '银行卡号', width: 200},
-                    {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
-                ]   
-            ],
-            where:{
-                name: $('#name').val(),
-                startDate: $('#searchDate').val()
-            }
-        });
+        // table.render({
+        //     elem: '#table',
+        //     height: 470,
+        //     url: baseUrl + '/sidan/finance/employee/list', //数据接口
+        //     page: true, //开启分页
+        //     limit: 20,
+        //     cols: [
+        //         [//表头
+        //             {field: 'employeeName', title: '点工姓名', width: 100},
+        //             {field: 'year', title: '年', width: 100},
+        //             {field: 'month', title: '月', width: 100},
+        //             {field: 'projectName', title: '项目名称', width: 200},
+        //             {field: 'day', title: '工日', width: 100, sort: true},
+        //             {field: 'hour', title: '工时', width: 100, sort: true},
+        //             {field: 'price', title: '工价', width: 100, sort: true},
+        //             {field: 'amount', title: '实际工资', width: 120, sort: true},
+        //             {field: 'payAmount', title: '实际应付工资', width: 120, sort: true},
+        //             {field: 'workTypeName', title: '工种', width: 100},
+        //             {field: 'deductAmount', title: '违章扣款', width: 120, sort: true},
+        //             {field: 'bonus', title: '奖励款', width: 120, sort: true},
+        //             {field: 'idNo', title: '身份证号', width: 200},
+        //             {field: 'bankNo', title: '银行卡号', width: 200},
+        //             {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
+        //         ]   
+        //     ],
+        //     where:{
+        //         name: $('#name').val(),
+        //         startDate: $('#searchDate').val()
+        //     }
+        // });
 
         $.ajax({
             url: baseUrl + '/sidan/finance/attendance/day/info',
             type: 'get',
-            data: {
-                employeeId: employeeId
-            },
+            // data: {
+            //     employeeId: employeeId
+            // },
             dataType: 'json',
             success: function(json){
                 console.log(json);
@@ -201,21 +242,21 @@
                 }
                 $('#projectList').html(html);
 
-                $('#responsiblePerson').val(json.info.responsiblePerson);
-                if(employee.managerId > 0){
-                    var rp_html = '<div>' +
-                                    '<span>' + json.info.responsiblePersonName + '</span>&nbsp;' +
-                                    '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
-                                  '</div>';
-                    $('#emp_rp').html(rp_html);
-                }
-                $('#bankName').val(employee.bankName);
-                var typeList = $('#type').children();
-                for (var i = 0; i < typeList.length; i++) {
-                    if (typeList[i].value == employee.type) {
-                        typeList[i].selected = true;
-                    }
-                }
+                // $('#responsiblePerson').val(json.info.responsiblePerson);
+                // if(employee.managerId > 0){
+                //     var rp_html = '<div>' +
+                //                     '<span>' + json.info.responsiblePersonName + '</span>&nbsp;' +
+                //                     '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
+                //                   '</div>';
+                //     $('#emp_rp').html(rp_html);
+                // }
+                // $('#bankName').val(employee.bankName);
+                // var typeList = $('#type').children();
+                // for (var i = 0; i < typeList.length; i++) {
+                //     if (typeList[i].value == employee.type) {
+                //         typeList[i].selected = true;
+                //     }
+                // }
                 form.render();
             }
         })
@@ -238,6 +279,45 @@
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+
+
+        $('#add-col').on('click',function(){
+            var html = '<tr>' +
+                            '<td><input type="checkbox" lay-skin="primary"></td>' +
+                            '<td><input type="text"></td>' +
+                            '<td><input type="number"></td>' +
+                            '<td><input type="number"></td>' +
+                            '<td><input type="number"></td>' +
+                            '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td><input type="number"></td>' +
+                            '<td><input type="number"></td>' +
+                            '<td><input type="text"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td>' +
+                                '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
+                                '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
+                            '</td>' +
+                       '</tr>';
+            $('#emp-list').append(html);
+            form.render();
+        })
+
+        layui.del = function(_this){
+            $(_this).parent().parent().remove();
+        }
+
+        layui.cop = function(_this){
+            $(_this).parent().parent().after($(_this).parent().parent().clone(true));
+        }
+
+        // table.on('checkbox(selectAll)', function(data){
+        //     console.log(data.elem); //得到checkbox原始DOM对象
+        //     console.log(data.elem.checked); //是否被选中，true或者false
+        //     console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+        //     console.log(data.othis); //得到美化后的DOM对象
+        // });
 
         $('#emp_rp').on('click',function(e){
             if(e.target.id != 'emp_rp'){

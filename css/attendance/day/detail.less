@@ -133,3 +133,87 @@ h1{
     box-shadow: none !important;
     border: solid 1px #e6e6e6 !important;
 }
+
+.attendance-table{
+
+    .layui-form-checkbox{
+        padding: 0;
+    }
+    
+    thead{
+
+        th{
+
+            &:first-child{
+                text-align: center;
+            }
+
+        }
+    }
+
+    th,td{
+        font-size: 12px;
+    }
+
+    tbody{
+
+        tr{
+            &:hover{
+                background-color: #fff;
+            }
+        }
+
+        tr:hover > td{
+            border-left-color: #009688;
+            border-right-color: #009688;
+        }
+
+        td{
+            padding: 0;
+
+            input[type=text],input[type=number]{
+                width: 100%;
+                height: 30px;
+                color: #666;
+                padding-left: 15px;
+                box-sizing: border-box;
+                border: none;
+                cursor: pointer;
+
+                &:hover{
+                    background-color: #f2f2f2;
+                }
+        
+                &:not(.layui-disabled):focus{    
+                    cursor: text;
+                    background-color: #fff;
+                }
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                }
+                &{
+                    -moz-appearance: textfield;
+                }
+            }
+
+            &:first-child,&:last-child{
+                text-align: center;
+            }
+        }
+        
+    }
+
+}
+
+.attendance-table-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .layui-elem-quote{
+        margin-bottom: 0;
+    }
+    
+}
