@@ -116,9 +116,10 @@
                     <span class="layui-btn layui-btn-primary layui-btn-sm">从点工姓名批量添加</span>
                 </div>
             </div>
+            <!-- <table id="attendance" lay-filter="attendance"></table> -->
             <table class="layui-table attendance-table" id="attendance-table">
                 <colgroup>
-                    <col width="10">
+                    <col width="30">
                     <col width="80">
                     <col width="80">
                     <col width="80">
@@ -197,16 +198,15 @@
         $('#attendanceDayId').val(attendanceDayId);
 
         // table.render({
-        //     elem: '#table',
+        //     elem: '#attendance',
         //     height: 470,
         //     url: baseUrl + '/sidan/finance/employee/list', //数据接口
-        //     page: true, //开启分页
+        //     page: false, //开启分页
         //     limit: 20,
         //     cols: [
         //         [//表头
-        //             {field: 'employeeName', title: '点工姓名', width: 100},
-        //             {field: 'year', title: '年', width: 100},
-        //             {field: 'month', title: '月', width: 100},
+        //             {type:'checkbox'},
+        //             {field: 'employeeName', title: '点工姓名', width: 100, toolbar: '#input'},
         //             {field: 'projectName', title: '项目名称', width: 200},
         //             {field: 'day', title: '工日', width: 100, sort: true},
         //             {field: 'hour', title: '工时', width: 100, sort: true},
@@ -283,7 +283,7 @@
 
         $('#add-col').on('click',function(){
             var html = '<tr>' +
-                            '<td><input type="checkbox" lay-skin="primary"></td>' +
+                            '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
                             '<td><input type="text"></td>' +
                             '<td><input type="number"></td>' +
                             '<td><input type="number"></td>' +
@@ -309,15 +309,20 @@
         }
 
         layui.cop = function(_this){
-            $(_this).parent().parent().after($(_this).parent().parent().clone(true));
+            var row = $(_this).parent().parent();
+            $(row).after($(row).clone());
+            form.render();
         }
 
-        // table.on('checkbox(selectAll)', function(data){
-        //     console.log(data.elem); //得到checkbox原始DOM对象
-        //     console.log(data.elem.checked); //是否被选中，true或者false
-        //     console.log(data.value); //复选框value值，也可以通过data.elem.value得到
-        //     console.log(data.othis); //得到美化后的DOM对象
-        // });
+        form.on('checkbox(allSelect)',function(data){
+            console.log(data);
+            var child = $('.layui-table').find('tbody input[type="checkbox"]');
+            var tableData = layui.table.cache.searchID;
+            child.each(function(index, item){
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
 
         $('#emp_rp').on('click',function(e){
             if(e.target.id != 'emp_rp'){

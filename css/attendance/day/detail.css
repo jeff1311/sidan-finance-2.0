@@ -137,9 +137,8 @@ h1 {
 .attendance-table tbody tr:hover {
   background-color: #fff;
 }
-.attendance-table tbody tr:hover > td {
-  border-left-color: #009688;
-  border-right-color: #009688;
+.attendance-table tbody tr:hover > td input {
+  border: dashed 1px #5FB878;
 }
 .attendance-table tbody td {
   padding: 0;
