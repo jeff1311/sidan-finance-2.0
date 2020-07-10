@@ -16,7 +16,7 @@
             <div class="content">
                 <h1 id="act-type"></h1>
                 <div class="btns">
-                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-employee">保存</button>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-attendance-day">保存</button>
                     <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/day/list.html">返回</a>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                 <blockquote class="layui-elem-quote">点工考勤明细</blockquote>
                 <div class="btns">
                     <span class="layui-btn layui-btn-primary layui-btn-sm" id="add-col">添加一行</span>
-                    <span class="layui-btn layui-btn-primary layui-btn-sm">从点工姓名批量添加</span>
+                    <span class="layui-btn layui-btn-primary layui-btn-sm" id="select-emps">从点工姓名批量添加</span>
                 </div>
             </div>
             <!-- <table id="attendance" lay-filter="attendance"></table> -->
@@ -162,6 +162,7 @@
 <script src="/js/common.js"></script>
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/lib/layui/layui.js"></script>
+<script src="/js/select-emp.js"></script>
 <script type="text/html" id="eList-tpl">
 
     <div class="layui-row" style="margin-bottom: 0;padding: 10px;box-sizing: border-box;">
@@ -197,35 +198,7 @@
         var attendanceDayId = getParamFromUrl('attendanceDayId');
         $('#attendanceDayId').val(attendanceDayId);
 
-        // table.render({
-        //     elem: '#attendance',
-        //     height: 470,
-        //     url: baseUrl + '/sidan/finance/employee/list', //数据接口
-        //     page: false, //开启分页
-        //     limit: 20,
-        //     cols: [
-        //         [//表头
-        //             {type:'checkbox'},
-        //             {field: 'employeeName', title: '点工姓名', width: 100, toolbar: '#input'},
-        //             {field: 'projectName', title: '项目名称', width: 200},
-        //             {field: 'day', title: '工日', width: 100, sort: true},
-        //             {field: 'hour', title: '工时', width: 100, sort: true},
-        //             {field: 'price', title: '工价', width: 100, sort: true},
-        //             {field: 'amount', title: '实际工资', width: 120, sort: true},
-        //             {field: 'payAmount', title: '实际应付工资', width: 120, sort: true},
-        //             {field: 'workTypeName', title: '工种', width: 100},
-        //             {field: 'deductAmount', title: '违章扣款', width: 120, sort: true},
-        //             {field: 'bonus', title: '奖励款', width: 120, sort: true},
-        //             {field: 'idNo', title: '身份证号', width: 200},
-        //             {field: 'bankNo', title: '银行卡号', width: 200},
-        //             {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
-        //         ]   
-        //     ],
-        //     where:{
-        //         name: $('#name').val(),
-        //         startDate: $('#searchDate').val()
-        //     }
-        // });
+
 
         $.ajax({
             url: baseUrl + '/sidan/finance/attendance/day/info',
@@ -261,22 +234,22 @@
             }
         })
 
-        form.on('submit(sub-employee)', function(data){
+        form.on('submit(sub-attendance-day)', function(data){
             console.log(data);
-            $.ajax({
-                url:baseUrl + '/sidan/finance/attendance/day/add',
-                type:'post',
-                data:data.field,
-                dataType:'json',
-                success:function(json){
-                    console.log(json);
-                    if(json.code == 0){
-                        layer.msg('保存成功');
-                    }else{
-                        layer.msg(json.msg);
-                    }
-                }
-            });
+            // $.ajax({
+            //     url:baseUrl + '/sidan/finance/attendance/day/add',
+            //     type:'post',
+            //     data:data.field,
+            //     dataType:'json',
+            //     success:function(json){
+            //         console.log(json);
+            //         if(json.code == 0){
+            //             layer.msg('保存成功');
+            //         }else{
+            //             layer.msg(json.msg);
+            //         }
+            //     }
+            // });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -284,7 +257,7 @@
         $('#add-col').on('click',function(){
             var html = '<tr>' +
                             '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
-                            '<td><input type="text"></td>' +
+                            '<td><input type="text" onclick="layui.select_emp(this)"></td>' +
                             '<td><input type="number"></td>' +
                             '<td><input type="number"></td>' +
                             '<td><input type="number"></td>' +
@@ -303,6 +276,42 @@
             $('#emp-list').append(html);
             form.render();
         })
+        
+        function render_attendance_table(array){
+            var html = '';
+            for (const emp of array) {
+                html += '<tr>' +
+                                '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
+                                '<td><input type="text" onclick="layui.select_emp(this)"></td>' +
+                                '<td><input type="number"></td>' +
+                                '<td><input type="number"></td>' +
+                                '<td><input type="number"></td>' +
+                                '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                                '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                                '<td><input type="number"></td>' +
+                                '<td><input type="number"></td>' +
+                                '<td><input type="text"></td>' +
+                                '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
+                                '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
+                                '<td>' +
+                                    '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
+                                    '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
+                                '</td>' +
+                           '</tr>';
+            }
+            $('#emp-list').append(html);
+            form.render();
+        }
+
+        $('#select-emps').on('click',function(){
+            select_emp(table,'checkbox');
+        })
+
+        //选人回调
+        layui.select_emp_callback = function(data){
+            console.log(data);
+            render_attendance_table(data);
+        }
 
         layui.del = function(_this){
             $(_this).parent().parent().remove();
@@ -314,6 +323,10 @@
             form.render();
         }
 
+        layui.select_emp = function(_this){
+            select_emp(table,'radio');
+        }
+
         form.on('checkbox(allSelect)',function(data){
             console.log(data);
             var child = $('.layui-table').find('tbody input[type="checkbox"]');
@@ -323,6 +336,8 @@
             });
             form.render('checkbox');
         });
+
+        
 
         $('#emp_rp').on('click',function(e){
             if(e.target.id != 'emp_rp'){
