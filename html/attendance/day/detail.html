@@ -303,14 +303,28 @@
             form.render();
         }
 
+        function render_attendance_table_row(data,_this){
+            var emp = data[0];
+            var children = $(_this).parent().parent().children();
+            console.log(children);
+            $($(children[1]).children()[0]).val(emp.name);
+            $($(children[9]).children()[0]).val(emp.typeName);
+            $($(children[10]).children()[0]).val(emp.certNo);
+            $($(children[11]).children()[0]).val(emp.bankNo);
+        }
+
         $('#select-emps').on('click',function(){
-            select_emp(table,'checkbox');
+            select_emp(table,2);
         })
 
         //选人回调
-        layui.select_emp_callback = function(data){
+        layui.select_emp_callback = function(type,data,_this){
             console.log(data);
-            render_attendance_table(data);
+            if(type == 1){
+                render_attendance_table_row(data,_this);
+            }else if(type == 2){
+                render_attendance_table(data);
+            }
         }
 
         layui.del = function(_this){
@@ -324,7 +338,7 @@
         }
 
         layui.select_emp = function(_this){
-            select_emp(table,'radio');
+            select_emp(table,1,_this);
         }
 
         form.on('checkbox(allSelect)',function(data){

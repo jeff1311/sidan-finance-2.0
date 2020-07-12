@@ -1,7 +1,7 @@
 
 
 
-function select_emp(table,type){
+function select_emp(table,type,_this){
     
     layer.closeAll();
 
@@ -44,7 +44,7 @@ function select_emp(table,type){
                 limit: 20,
                 cols: [
                     [//表头
-                        {type: type},
+                        {type: type == 1 ? 'radio' : 'checkbox'},
                         {field: 'name', title: '员工姓名', width: 100},
                         {field: 'gender', title: '性别', width: 60},
                         {field: 'typeName', title: '工种', width: 60},
@@ -67,7 +67,7 @@ function select_emp(table,type){
             var data = table.checkStatus('select-emp-reload').data;
             // console.log(data);
             if(data.length > 0){
-                layui.select_emp_callback(data);
+                layui.select_emp_callback(type,data,_this);
                 layer.close(index);
             }else{
                 layer.msg('未选择任何员工！');
