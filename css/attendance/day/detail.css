@@ -181,3 +181,7 @@ h1 {
 .attendance-table-title .layui-elem-quote {
   margin-bottom: 0;
 }
+.layui-disabled,
+.layui-disabled:hover {
+  color: inherit !important;
+}
