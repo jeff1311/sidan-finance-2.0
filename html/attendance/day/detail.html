@@ -170,7 +170,7 @@
             <input type="text" class="layui-input" placeholder="查询员工姓名" autocomplete="off" id="search-emp">
         </div>
         <div class="layui-col-md-12" style="margin-top: 10px;">
-            <ul class="employee-list" id="emp-list">
+            <ul class="employee-list" id="e-list">
                 {{# for (const emp of d.list) { }}
                     <li onclick="layui.chooseEmp({{ emp.id }},'{{ emp.name }}')">
                         <span>{{ emp.name }}</span>
@@ -236,6 +236,11 @@
 
         form.on('submit(sub-attendance-day)', function(data){
             console.log(data);
+            var rows = $('#attendance-table').find('tr');
+            for (const row of rows) {
+                var cols = $(row).find('td');
+                console.log(cols);
+            }
             // $.ajax({
             //     url:baseUrl + '/sidan/finance/attendance/day/add',
             //     type:'post',
@@ -282,7 +287,7 @@
             for (const emp of array) {
                 html += '<tr>' +
                                 '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
-                                '<td><input type="text" onclick="layui.select_emp(this)"></td>' +
+                                '<td><input type="text" onclick="layui.select_emp(this)" value="' + emp.name + '"></td>' +
                                 '<td><input type="number"></td>' +
                                 '<td><input type="number"></td>' +
                                 '<td><input type="number"></td>' +
@@ -290,9 +295,9 @@
                                 '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
                                 '<td><input type="number"></td>' +
                                 '<td><input type="number"></td>' +
-                                '<td><input type="text"></td>' +
-                                '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
-                                '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
+                                '<td><input type="text" value="' + emp.typeName + '"></td>' +
+                                '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.certNo + '"></td>' +
+                                '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.bankNo + '"></td>' +
                                 '<td>' +
                                     '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
                                     '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
@@ -433,7 +438,7 @@
                             '</div>'
                         ].join('');
             }
-            $('#emp-list').html(html);
+            $('#e-list').html(html);
         }
 
         layui.removeEmp = function(){
