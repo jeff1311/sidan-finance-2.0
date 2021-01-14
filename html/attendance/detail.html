@@ -10,14 +10,14 @@
 
     <form class="layui-form">
         
-        <input type="hidden" name="attendanceDayId" id="attendanceDayId">
+        <input type="hidden" name="attendanceId" id="attendanceId">
 
         <div class="title">
             <div class="content">
                 <h1 id="act-type"></h1>
                 <div class="btns">
-                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-attendance-day">保存</button>
-                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/day/list.html">返回</a>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-attendance">保存</button>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/list.html">返回</a>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label">实际应付工资</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
+                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -74,7 +74,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label">实际工资合计</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="certNo" id="certNo" autocomplete="off" class="layui-input">
+                        <input type="text" name="amount" id="amount" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -100,7 +100,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label required">负责人</label>
                     <div class="layui-col-md8">
-                        <input type="hidden" name="responsiblePerson" id="responsiblePerson" required lay-verify="required">
+                        <input type="hidden" name="manager" id="manager" required lay-verify="required">
                         <div class="emp" id="emp_rp"></div>
                     </div>
                 </div>
@@ -195,13 +195,13 @@
         }else{
             $('#act-type').text('编辑 点工考勤管理');
         }
-        var attendanceDayId = getParamFromUrl('attendanceDayId');
-        $('#attendanceDayId').val(attendanceDayId);
+        var attendanceId = getParamFromUrl('attendanceId');
+        $('#attendanceId').val(attendanceId);
 
 
 
         $.ajax({
-            url: baseUrl + '/sidan/finance/attendance/day/info',
+            url: baseUrl + '/sidan/finance/attendance/detail',
             type: 'get',
             // data: {
             //     employeeId: employeeId
@@ -215,10 +215,10 @@
                 }
                 $('#projectList').html(html);
 
-                // $('#responsiblePerson').val(json.info.responsiblePerson);
+                // $('#manager').val(json.info.manager);
                 // if(employee.managerId > 0){
                 //     var rp_html = '<div>' +
-                //                     '<span>' + json.info.responsiblePersonName + '</span>&nbsp;' +
+                //                     '<span>' + json.info.managerName + '</span>&nbsp;' +
                 //                     '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
                 //                   '</div>';
                 //     $('#emp_rp').html(rp_html);
@@ -234,27 +234,40 @@
             }
         })
 
-        form.on('submit(sub-attendance-day)', function(data){
+        form.on('submit(sub-attendance)', function(data){
             console.log(data);
-            var rows = $('#attendance-table').find('tr');
+            var rows = $('#emp-list').find('tr');
+            var empList = new Array();
             for (const row of rows) {
-                var cols = $(row).find('td');
+                var cols = $(row).find('input');
                 console.log(cols);
+                var emp = {
+                    id: $(cols[1]).attr('id'),
+                    day: $(cols[2]).val(),
+                    hour: $(cols[3]).val(),
+                    price: $(cols[4]).val(),
+                    deduct: $(cols[7]).val(),
+                    bonus: $(cols[8]).val()
+                };
+                empList.push(emp);
             }
-            // $.ajax({
-            //     url:baseUrl + '/sidan/finance/attendance/day/add',
-            //     type:'post',
-            //     data:data.field,
-            //     dataType:'json',
-            //     success:function(json){
-            //         console.log(json);
-            //         if(json.code == 0){
-            //             layer.msg('保存成功');
-            //         }else{
-            //             layer.msg(json.msg);
-            //         }
-            //     }
-            // });
+            console.log(empList);
+            data.field.empList = JSON.stringify(empList);
+            console.log(data.field);
+            $.ajax({
+                url:baseUrl + '/sidan/finance/attendance',
+                type:'post',
+                data:data.field,
+                dataType:'json',
+                success:function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        layer.msg('保存成功');
+                    }else{
+                        layer.msg(json.msg);
+                    }
+                }
+            });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -263,14 +276,14 @@
             var html = '<tr>' +
                             '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
                             '<td><input type="text" onclick="layui.select_emp(this)"></td>' +
-                            '<td><input type="number"></td>' +
-                            '<td><input type="number"></td>' +
-                            '<td><input type="number"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
                             '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
                             '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
-                            '<td><input type="number"></td>' +
-                            '<td><input type="number"></td>' +
-                            '<td><input type="text"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
                             '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
                             '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
                             '<td>' +
@@ -286,23 +299,23 @@
             var html = '';
             for (const emp of array) {
                 html += '<tr>' +
-                                '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
-                                '<td><input type="text" onclick="layui.select_emp(this)" value="' + emp.name + '"></td>' +
-                                '<td><input type="number"></td>' +
-                                '<td><input type="number"></td>' +
-                                '<td><input type="number"></td>' +
-                                '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
-                                '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
-                                '<td><input type="number"></td>' +
-                                '<td><input type="number"></td>' +
-                                '<td><input type="text" value="' + emp.typeName + '"></td>' +
-                                '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.certNo + '"></td>' +
-                                '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.bankNo + '"></td>' +
-                                '<td>' +
-                                    '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
-                                    '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
-                                '</td>' +
-                           '</tr>';
+                            '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
+                            '<td><input type="text" onclick="layui.select_emp(this)" value="' + emp.name + '" id="' + emp.id + '"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td><input type="number" class="layui-disabled" readonly="readonly"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="number" oninput="layui.cal(this)"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.typeName + '"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.certNo + '"></td>' +
+                            '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.bankNo + '"></td>' +
+                            '<td>' +
+                                '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
+                                '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
+                            '</td>' +
+                        '</tr>';
             }
             $('#emp-list').append(html);
             form.render();
@@ -312,6 +325,7 @@
             var emp = data[0];
             var children = $(_this).parent().parent().children();
             console.log(children);
+            $($(children[1]).children()[0]).attr('id',emp.id);
             $($(children[1]).children()[0]).val(emp.name);
             $($(children[9]).children()[0]).val(emp.typeName);
             $($(children[10]).children()[0]).val(emp.certNo);
@@ -397,10 +411,10 @@
         layui.chooseEmp = function(id,name){
             console.log(id);
             var html = '<div>' +
-                '<span>' + name + '</span>&nbsp;' +
-                '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
-                '</div>';
-            $('#responsiblePerson').val(id);
+                            '<span>' + name + '</span>&nbsp;' +
+                            '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
+                       '</div>';
+            $('#manager').val(id);
             $('#emp_rp').html(html);
             layer.closeAll();
         }
@@ -442,10 +456,35 @@
         }
 
         layui.removeEmp = function(){
-            $('#responsiblePerson').val(-1);
+            $('#manager').val(-1);
             $('#emp_rp').html('');
         }
 
+        //点工（工时/6+工日）*工价
+        layui.cal = function(_this){
+            var inputList = $($(_this).parent().parent()).find('input');
+            var day = $(inputList[2]).val();
+            var hour = $(inputList[3]).val();
+            var price = $(inputList[4]).val();
+            if(day != null && hour != null && price != null && day != '' && hour != '' && price != ''){
+                var amount = (parseFloat(hour) / 6 + parseFloat(day)) * parseFloat(price);
+                $(inputList[5]).val(amount.toFixed(2));
+                var deduct = $(inputList[7]).val();
+                var bonus = $(inputList[8]).val();
+                if(deduct != null && deduct != ''){
+                    amount -= parseFloat(deduct);
+                }
+                if(bonus != null && bonus != ''){
+                    amount += parseFloat(bonus);
+                }
+                $(inputList[6]).val(amount.toFixed(2));
+            }else{
+                $(inputList[5]).val('');
+                $(inputList[6]).val('');
+            }
+        }
+
     });
+    
 </script>
 </html>
