@@ -10,7 +10,7 @@
 
     <form class="layui-form">
         
-        <input type="hidden" name="attendanceId" id="attendanceId">
+        <input type="hidden" name="attendanceId" id="attId">
 
         <div class="title">
             <div class="content">
@@ -35,7 +35,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label">工程编号</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="projectNo" id="projectNo" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectNo" id="projectNo" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -56,7 +56,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label">实际应付工资</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input">
+                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -74,7 +74,7 @@
                 <div class="layui-col-md6">
                     <label class="layui-form-label">实际工资合计</label>
                     <div class="layui-col-md8">
-                        <input type="text" name="amount" id="amount" autocomplete="off" class="layui-input">
+                        <input type="text" name="amount" id="amount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
                     </div>
                 </div>
                 <div class="layui-col-md6">
@@ -183,56 +183,100 @@
 
 </script>
 <script>
+
     layui.use(['layer','form','laytpl','table'], function(){
         var layer = layui.layer;
         var form = layui.form;
         var laytpl = layui.laytpl;
         var table = layui.table;
         
+        var attId = getParamFromUrl('attId');
         var actType = getParamFromUrl('type');
         if(actType == 'new'){
             $('#act-type').text('新建 点工考勤管理');
         }else{
             $('#act-type').text('编辑 点工考勤管理');
+            render(attId);
         }
-        var attendanceId = getParamFromUrl('attendanceId');
-        $('#attendanceId').val(attendanceId);
+        $('#attId').val(attId);
 
+        function render(attId){
+            $.ajax({
+                url: baseUrl + '/sidan/finance/attendance/detail',
+                type: 'get',
+                data: {
+                    attId: attId
+                },
+                dataType: 'json',
+                success: function(json){
+                    console.log(json);
+                    var html = '<option value="">请选择</option>';
+                    for (const p of json.projectList) {
+                        if(json.attInfo.projectId == p.id){
+                            html += '<option value="' + p.id + ',' + p.no + '" selected>' + p.name + '</option>';
+                        }else{
+                            html += '<option value="' + p.id + ',' + p.no + '">' + p.name + '</option>';
+                        }
+                    }
+                    $('#projectList').html(html);
+                    $('#projectNo').val(json.attInfo.projectNo);
+                    var typeList = $('#type').children();
+                    for (var i = 0; i < typeList.length; i++) {
+                        if (typeList[i].value == json.attInfo.empType) {
+                            typeList[i].selected = true;
+                        }
+                    }
+                    var yearList = $('#year').children();
+                    for (var i = 0; i < yearList.length; i++) {
+                        if (yearList[i].value == json.attInfo.year) {
+                            yearList[i].selected = true;
+                        }
+                    }
+                    var monthList = $('#month').children();
+                    for (var i = 0; i < monthList.length; i++) {
+                        if (monthList[i].value == json.attInfo.month) {
+                            monthList[i].selected = true;
+                        }
+                    }
+                    $('#payAmount').val(json.attInfo.payAmount);
+                    $('#amount').val(json.attInfo.amount);
 
+                    if(json.attInfo.manager != null || json.attInfo.manager != ''){
+                        var rp_html = '<div>' +
+                                        '<span>' + json.attInfo.managerName + '</span>&nbsp;' +
+                                        '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
+                                      '</div>';
+                        $('#emp_rp').html(rp_html);
+                        $('#manager').val(json.attInfo.manager);
+                    }
+                   
+                    var html = '';
+                    for (const ad of json.adList) {
+                        html += '<tr>' +
+                                    '<td><input type="checkbox" lay-skin="primary" lay-filter="select"></td>' +
+                                    '<td><input type="text" onclick="layui.select_emp(this)" value="' + ad.empName + '" id="' + ad.empId + '"></td>' +
+                                    '<td><input type="number" oninput="layui.cal(this)" value="' + ad.day + '"></td>' +
+                                    '<td><input type="number" oninput="layui.cal(this)" value="' + ad.hour + '"></td>' +
+                                    '<td><input type="number" oninput="layui.cal(this)" value="' + ad.price + '"></td>' +
+                                    '<td><input type="number" class="layui-disabled" readonly="readonly" value="' + ad.amount + '"></td>' +
+                                    '<td><input type="number" class="layui-disabled" readonly="readonly" value="' + ad.payAmount + '"></td>' +
+                                    '<td><input type="number" oninput="layui.cal(this)" value="' + ad.deductAmount + '"></td>' +
+                                    '<td><input type="number" oninput="layui.cal(this)" value="' + ad.bonus + '"></td>' +
+                                    '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.empType + '"></td>' +
+                                    '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.idNo + '"></td>' +
+                                    '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.bankNo + '"></td>' +
+                                    '<td>' +
+                                        '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
+                                        '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
+                                    '</td>' +
+                                '</tr>';
+                    }
+                    $('#emp-list').append(html);
 
-        $.ajax({
-            url: baseUrl + '/sidan/finance/attendance/detail',
-            type: 'get',
-            // data: {
-            //     employeeId: employeeId
-            // },
-            dataType: 'json',
-            success: function(json){
-                console.log(json);
-                var html = '<option value="">请选择</option>';
-                for (const p of json.projectList) {
-                    html += '<option value="' + p.id + '">' + p.name + '</option>';
+                    form.render();
                 }
-                $('#projectList').html(html);
-
-                // $('#manager').val(json.info.manager);
-                // if(employee.managerId > 0){
-                //     var rp_html = '<div>' +
-                //                     '<span>' + json.info.managerName + '</span>&nbsp;' +
-                //                     '<i class="layui-icon" onclick="layui.removeEmp()">&#x1006;</i>' +
-                //                   '</div>';
-                //     $('#emp_rp').html(rp_html);
-                // }
-                // $('#bankName').val(employee.bankName);
-                // var typeList = $('#type').children();
-                // for (var i = 0; i < typeList.length; i++) {
-                //     if (typeList[i].value == employee.type) {
-                //         typeList[i].selected = true;
-                //     }
-                // }
-                form.render();
-            }
-        })
+            })
+        }
 
         form.on('submit(sub-attendance)', function(data){
             console.log(data);
@@ -269,6 +313,18 @@
                 }
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('select(projectList)', function(data){
+            console.log(data);
+            $('#projectNo').val(data.value.split(',')[1]);
+            // if(data.value == 1){
+            //     $("#searchSessionNum").attr("disabled","true");
+            //     form.render('select');
+            // }else{
+            //     $("#searchSessionNum").removeAttr("disabled");
+            //     form.render('select');//select是固定写法 不是选择器
+            // }
         });
 
 
@@ -348,12 +404,14 @@
 
         layui.del = function(_this){
             $(_this).parent().parent().remove();
+            calAll();
         }
 
         layui.cop = function(_this){
             var row = $(_this).parent().parent();
             $(row).after($(row).clone());
             form.render();
+            calAll();
         }
 
         layui.select_emp = function(_this){
@@ -369,8 +427,6 @@
             });
             form.render('checkbox');
         });
-
-        
 
         $('#emp_rp').on('click',function(e){
             if(e.target.id != 'emp_rp'){
@@ -482,9 +538,22 @@
                 $(inputList[5]).val('');
                 $(inputList[6]).val('');
             }
+            calAll();
+        }
+
+        function calAll(){
+            var children = $('#emp-list')[0].children;
+            var amount = 0;
+            var payAmount = 0;
+            for (const tr of children) {
+                amount += parseFloat($(tr.children[5]).find('input').val());
+                payAmount += parseFloat($(tr.children[6]).find('input').val());
+            }
+            $('#amount').val(amount.toFixed(2));
+            $('#payAmount').val(payAmount.toFixed(2));
         }
 
     });
-    
+
 </script>
 </html>

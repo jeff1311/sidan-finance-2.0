@@ -12,7 +12,7 @@
 
         <div class="layui-row">
             <div class="layui-col-md2 mr-1">
-                <input type="text" autocomplete="off" class="layui-input" placeholder="员工姓名" id="name">
+                <input type="text" autocomplete="off" class="layui-input" placeholder="工程名称" id="name">
             </div>
             <div class="layui-col-md1">
                 <button class="layui-btn layui-btn-primary" id="search">查询</button>
@@ -47,21 +47,21 @@
         layui.renderTable = function(){
             table.render({
                 elem: '#table',
-                height: 790,
-                url: baseUrl + '/sidan/finance/employee/list', //数据接口
+                height: 750,
+                url: baseUrl + '/sidan/finance/attendance/list', //数据接口
                 page: true, //开启分页
                 limit: 20,
                 cols: [
                     [//表头
                         {field: 'id', title: '序号', width: '7%', sort: true},
-                        {field: 'name', title: '工程名称', width: '10%'},
-                        {field: 'gender', title: '工程编号', width: '7%'},
-                        {field: 'phone', title: '工种', width: '10.5%'},
-                        {field: 'certNo', title: '实际应付工资', width: '13%', sort: true},
-                        {field: 'bankNo', title: '年', width: '13%', sort: true},
-                        {field: 'superiorName', title: '实际工资合计', width: '10%', sort: true},
-                        {field: 'managerName', title: '月', width: '10%', sort: true},
-                        {field: 'bankName', title: '负责人', width: '13%'},
+                        {field: 'projectName', title: '工程名称', width: '10%'},
+                        {field: 'projectNo', title: '工程编号', width: '7%'},
+                        {field: 'empType', title: '工种', width: '10.5%'},
+                        {field: 'year', title: '年', width: '13%', sort: true},
+                        {field: 'month', title: '月', width: '10%', sort: true},
+                        {field: 'payAmount', title: '实际应付工资', width: '13%', sort: true},
+                        {field: 'amount', title: '实际工资合计', width: '10%', sort: true},
+                        {field: 'managerName', title: '负责人', width: '13%'},
                         {fixed: 'right', title:'操作', toolbar: '#actBar', width:112}
                     ]   
                 ],
@@ -83,16 +83,13 @@
             console.log(obj.data);
             // var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
-                case 'add':
-                    layer.msg('添加');
-                    break;
                 case 'del':
                     layer.msg('你确定删除么？', {
                         time: 0, //不自动关闭
                         btn: ['确定', '取消'],
                         yes: function(index){
                             $.ajax({
-                                url:baseUrl + '/sidan/finance/employee/add',
+                                url:baseUrl + '/sidan/finance/attendance/del',
                                 type:'post',
                                 data:{
                                     employeeId:obj.data.id,
@@ -104,7 +101,7 @@
                                     if(json.code == 0){
                                         obj.del();
                                         layer.close(index);
-                                        layer.msg('删除成功');
+                                        layer.msg('删除成功');      
                                         // location.reload();//刷新父页面
                                     }else{
                                         layer.msg(json.msg);
@@ -115,7 +112,7 @@
                     });
                     break;
                 case 'edit':
-                    location.href = '/html/attendance/day/detail.html?attendanceDayId=' + obj.data.id;
+                    location.href = '/html/attendance/detail.html?attId=' + obj.data.id;
                     break;
             };
         });
