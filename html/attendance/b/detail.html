@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>点工考勤详情</title>
-    <link rel="stylesheet" href="/css/attendance/day/detail.css">
+    <title>包工考勤详情</title>
+    <link rel="stylesheet" href="/css/attendance/detail.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
                 <h1 id="act-type"></h1>
                 <div class="btns">
                     <button class="layui-btn layui-btn-sm" lay-submit lay-filter="sub-attendance">保存</button>
-                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/list.html">返回</a>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="/html/attendance/b/list.html">返回</a>
                 </div>
             </div>
         </div>
@@ -26,19 +26,26 @@
             
             <blockquote class="layui-elem-quote">基本信息</blockquote>
             <div class="layui-row layui-col-space10 x-city" id="location">
-                <div class="layui-col-md6">
+                <div class="layui-col-md4">
                     <label class="layui-form-label">工程名称</label>
                     <div class="layui-col-md8">
                         <select name="projectId" id="projectList" lay-filter="projectList"></select>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md4">
                     <label class="layui-form-label">工程编号</label>
                     <div class="layui-col-md8">
                         <input type="text" name="projectNo" id="projectNo" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label required">工人姓名</label>
+                    <div class="layui-col-md8">
+                        <input type="hidden" name="empId" id="empId" required lay-verify="required">
+                        <div class="emp" id="emp_rp"></div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
                     <label class="layui-form-label">工种</label>
                     <div class="layui-col-md8">
                         <select name="type" id="type" lay-filter="type">
@@ -53,13 +60,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-col-md6">
-                    <label class="layui-form-label">实际应付工资</label>
-                    <div class="layui-col-md8">
-                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
-                    </div>
-                </div>
-                <div class="layui-col-md6">
+                
+                <div class="layui-col-md4">
                     <label class="layui-form-label">年</label>
                     <div class="layui-col-md8">
                         <select name="year" id="year" lay-filter="year">
@@ -71,13 +73,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-col-md6">
-                    <label class="layui-form-label">实际工资合计</label>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">身份号</label>
                     <div class="layui-col-md8">
                         <input type="text" name="amount" id="amount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md4">
                     <label class="layui-form-label">月</label>
                     <div class="layui-col-md8">
                         <select name="month" id="month" lay-filter="month">
@@ -97,7 +99,25 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">银行卡号</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">实际应付工资</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="payAmount" id="payAmount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">实际工资合计</label>
+                    <div class="layui-col-md8">
+                        <input type="text" name="amount" id="amount" autocomplete="off" class="layui-input layui-disabled" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
                     <label class="layui-form-label required">负责人</label>
                     <div class="layui-col-md8">
                         <input type="hidden" name="manager" id="manager" required lay-verify="required">
@@ -106,14 +126,11 @@
                 </div>
             </div>
 
-
-
-
             <div class="attendance-table-title">
-                <blockquote class="layui-elem-quote">点工考勤明细</blockquote>
+                <blockquote class="layui-elem-quote">包工考勤明细</blockquote>
                 <div class="btns">
                     <span class="layui-btn layui-btn-primary layui-btn-sm" id="add-col">添加一行</span>
-                    <span class="layui-btn layui-btn-primary layui-btn-sm" id="select-emps">从点工姓名批量添加</span>
+                    <span class="layui-btn layui-btn-primary layui-btn-sm" id="select-emps">从员工列表批量添加</span>
                 </div>
             </div>
             <!-- <table id="attendance" lay-filter="attendance"></table> -->
@@ -129,25 +146,20 @@
                     <col width="80">
                     <col width="80">
                     <col width="80">
-                    <col width="140">
-                    <col width="140">
                     <col width="100">
-                    <col>
                 </colgroup>
                 <thead>
                     <tr>
                         <th><input type="checkbox" lay-skin="primary" lay-filter="allSelect"></th>
-                        <th>点工姓名</th>
-                        <th>工日</th>
-                        <th>工时</th>
-                        <th>工价</th>
-                        <th>实际工资</th>
-                        <th>应付工资</th>
+                        <th>工人姓名</th>
+                        <th>施工部位名称</th>
+                        <th>施工日期</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>单价</th>
                         <th>违章扣款</th>
                         <th>奖励款</th>
-                        <th>工种</th>
-                        <th>身份证号</th>
-                        <th>银行卡号</th>
+                        <th>单项小计</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -193,9 +205,9 @@
         var attId = getParamFromUrl('attId');
         var actType = getParamFromUrl('type');
         if(actType == 'new'){
-            $('#act-type').text('新建 点工考勤管理');
+            $('#act-type').text('新建 包工考勤管理');
         }else{
-            $('#act-type').text('编辑 点工考勤管理');
+            $('#act-type').text('编辑 包工考勤管理');
             render(attId);
         }
         $('#attId').val(attId);
@@ -263,8 +275,6 @@
                                     '<td><input type="number" oninput="layui.cal(this)" value="' + ad.deductAmount + '"></td>' +
                                     '<td><input type="number" oninput="layui.cal(this)" value="' + ad.bonus + '"></td>' +
                                     '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.empType + '"></td>' +
-                                    '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.idNo + '"></td>' +
-                                    '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + ad.bankNo + '"></td>' +
                                     '<td>' +
                                         '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
                                         '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
@@ -340,8 +350,6 @@
                             '<td><input type="number" oninput="layui.cal(this)"></td>' +
                             '<td><input type="number" oninput="layui.cal(this)"></td>' +
                             '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
-                            '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
-                            '<td><input type="text" class="layui-disabled" readonly="readonly"></td>' +
                             '<td>' +
                                 '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
                                 '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +
@@ -365,8 +373,6 @@
                             '<td><input type="number" oninput="layui.cal(this)"></td>' +
                             '<td><input type="number" oninput="layui.cal(this)"></td>' +
                             '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.typeName + '"></td>' +
-                            '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.certNo + '"></td>' +
-                            '<td><input type="text" class="layui-disabled" readonly="readonly" value="' + emp.bankNo + '"></td>' +
                             '<td>' +
                                 '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.del(this)">删除</span>' +
                                 '<span class="layui-btn layui-btn-primary layui-btn-xs" onclick="layui.cop(this)">复制</span>' +

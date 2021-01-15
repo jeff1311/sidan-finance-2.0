@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>点工考勤列表</title>
-    <link rel="stylesheet" href="/css/attendance/day/list.css">
+    <link rel="stylesheet" href="/css/attendance/list.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
             <div class="layui-col-md1">
                 <button class="layui-btn layui-btn-primary" id="search">查询</button>
             </div>
-            <a class="layui-btn add-p" href="/html/attendance/detail.html?type=new">
+            <a class="layui-btn add-p" href="/html/attendance/a/detail.html?type=new">
                 <i class="layui-icon">&#xe608;</i> 新建
             </a>
         </div>
@@ -112,7 +112,7 @@
                     });
                     break;
                 case 'edit':
-                    location.href = '/html/attendance/detail.html?attId=' + obj.data.id;
+                    location.href = '/html/attendance/a/detail.html?attId=' + obj.data.id;
                     break;
             };
         });
