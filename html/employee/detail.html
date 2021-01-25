@@ -172,56 +172,59 @@
             $('#act-type').text('新建 工人信息管理');
         }else{
             $('#act-type').text('编辑 工人信息管理');
+            loadData();
         }
-        var employeeId = getParamFromUrl('employeeId');
-        $('#employeeId').val(employeeId);
-
-        $.ajax({
-            url: baseUrl + '/sidan/finance/employee/info',
-            type: 'get',
-            data: {
-                employeeId: employeeId
-            },
-            dataType: 'json',
-            success: function(json){
-                console.log(json);
-                var employee = json.info;
-                $('#name').val(employee.name);
-                var genderList = $('#gender').children();
-                for (var i = 0; i < genderList.length; i++) {
-                    if (genderList[i].value == employee.gender) {
-                        genderList[i].selected = true;
+        
+        function loadData(){
+            var employeeId = getParamFromUrl('employeeId');
+            $('#employeeId').val(employeeId);
+            $.ajax({
+                url: baseUrl + '/sidan/finance/employee/info',
+                type: 'get',
+                data: {
+                    employeeId: employeeId
+                },
+                dataType: 'json',
+                success: function(json){
+                    console.log(json);
+                    var employee = json.info;
+                    $('#name').val(employee.name);
+                    var genderList = $('#gender').children();
+                    for (var i = 0; i < genderList.length; i++) {
+                        if (genderList[i].value == employee.gender) {
+                            genderList[i].selected = true;
+                        }
                     }
-                }
-                $('#phone').val(employee.phone);
-                $('#certNo').val(employee.certNo);
-                $('#bankNo').val(employee.bankNo);
-                $('#superior').val(employee.superiorId);
-                if(employee.superiorId > 0){
-                    var gm_html = '<div>' +
-                                    '<span>' + employee.superiorName + '</span>&nbsp;' +
-                                    '<i class="layui-icon" onclick="layui.removeEmp(1)">&#x1006;</i>' +
-                                '</div>';
-                    $('#emp_s').html(gm_html);
-                }
-                $('#manager').val(employee.managerId);
-                if(employee.managerId > 0){
-                    var m_html = '<div>' +
-                                    '<span>' + employee.managerName + '</span>&nbsp;' +
-                                    '<i class="layui-icon" onclick="layui.removeEmp(2)">&#x1006;</i>' +
-                                '</div>';
-                    $('#emp_m').html(m_html);
-                }
-                $('#bankName').val(employee.bankName);
-                var typeList = $('#type').children();
-                for (var i = 0; i < typeList.length; i++) {
-                    if (typeList[i].value == employee.type) {
-                        typeList[i].selected = true;
+                    $('#phone').val(employee.phone);
+                    $('#certNo').val(employee.certNo);
+                    $('#bankNo').val(employee.bankNo);
+                    $('#superior').val(employee.superiorId);
+                    if(employee.superiorId > 0){
+                        var gm_html = '<div>' +
+                                        '<span>' + employee.superiorName + '</span>&nbsp;' +
+                                        '<i class="layui-icon" onclick="layui.removeEmp(1)">&#x1006;</i>' +
+                                    '</div>';
+                        $('#emp_s').html(gm_html);
                     }
+                    $('#manager').val(employee.managerId);
+                    if(employee.managerId > 0){
+                        var m_html = '<div>' +
+                                        '<span>' + employee.managerName + '</span>&nbsp;' +
+                                        '<i class="layui-icon" onclick="layui.removeEmp(2)">&#x1006;</i>' +
+                                    '</div>';
+                        $('#emp_m').html(m_html);
+                    }
+                    $('#bankName').val(employee.bankName);
+                    var typeList = $('#type').children();
+                    for (var i = 0; i < typeList.length; i++) {
+                        if (typeList[i].value == employee.type) {
+                            typeList[i].selected = true;
+                        }
+                    }
+                    form.render();
                 }
-                form.render();
-            }
-        })
+            })
+        }
 
         form.on('submit(sub-employee)', function(data){
             console.log(data);
