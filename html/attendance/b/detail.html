@@ -206,11 +206,31 @@
         var actType = getParamFromUrl('type');
         if(actType == 'new'){
             $('#act-type').text('新建 包工考勤管理');
+            setProjectList();
         }else{
             $('#act-type').text('编辑 包工考勤管理');
             render(attId);
         }
         $('#attId').val(attId);
+
+        function setProjectList(){
+            $.ajax({
+                url: baseUrl + '/sidan/finance/project/list',
+                type: 'get',
+                dataType: 'json',
+                success: function(json){
+                    console.log(json);
+                    if(json.code == 0){
+                        var html = '<option value="">请选择</option>';
+                        for (const p of json.data) {
+                            html += '<option value="' + p.id + ',' + p.no + '">' + p.name + '</option>';
+                        }
+                        $('#projectList').html(html);
+                        form.render();
+                    }
+                }
+            });
+        }
 
         function render(attId){
             $.ajax({
